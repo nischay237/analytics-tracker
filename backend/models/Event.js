@@ -17,3 +17,22 @@ const eventSchema = new mongoose.Schema(
             required: true,
             index: true
         },
+        timestamp: {
+            type: Date,
+            required: true
+        },
+        clickX: {
+            type: Number,
+            default: null
+        },
+        clickY: {
+            type: Number,
+            default: null
+        }
+    },
+    {
+        timestamps: true
+    }
+);
+
+module.exports = mongoose.model('Event', eventSchema);
