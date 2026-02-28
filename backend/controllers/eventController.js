@@ -52,3 +52,57 @@ exports.getSessions = async (req, res) => {
             }
             sessionMap[event.sessionId].totalEvents++;
             if (event.timestamp > sessionMap[event.sessionId].lastSeen) {
+                sessionMap[event.sessionId].lastSeen = event.timestamp;
+            }
+        });
+
+        const sessions = Object.values(sessionMap);
+
+        res.json({
+            success: true,
+            data: sessions
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+};
+
+// 3. GET /api/sessions/:sessionId/events
+// Get all events of one specific session (Dynamic timeline user journey)
+exports.getSessionEvents = async (req, res) => {
+    try {
+        const events = await Event.find({ sessionId: req.params.sessionId })
+            .sort({ timestamp: 1 });
+
+        res.json({
+            success: true,
+            data: events
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+};
+
+// 4. GET /api/heatmap?pageUrl=...
+// Get all click coordinates for a specific page (For Heatmap render overlay)
+exports.getHeatmapData = async (req, res) => {
+    try {
+        const clicks = await Event.find({
+            pageUrl: req.query.pageUrl,
+            eventType: 'click'
+        });
+
+        res.json({
+            success: true,
+            data: clicks
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
