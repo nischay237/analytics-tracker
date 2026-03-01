@@ -106,3 +106,58 @@ exports.getHeatmapData = async (req, res) => {
         res.status(500).json({
             success: false,
             error: error.message
+        });
+    }
+};
+
+// 5. GET /api/pages
+// Get list of all unique page URLs currently logged in database (For Heatmap dropdown)
+exports.getAllPages = async (req, res) => {
+    try {
+        const pages = await Event.distinct('pageUrl');
+
+        res.json({
+            success: true,
+            data: pages
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+};
+
+// 6. DELETE /api/events/reset?pageUrl=...
+// Clear all click events for a specific page URL
+exports.resetPageEvents = async (req, res) => {
+    try {
+        const { pageUrl } = req.query;
+        if (!pageUrl) {
+            return res.status(400).json({ success: false, message: 'pageUrl is required' });
+        }
+
+        await Event.deleteMany({ pageUrl: pageUrl });
+
+        res.json({
+            success: true,
+            message: 'Heatmap data reset successfully for this page URL'
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+};
+
+// 7. GET /api/wipe
+// Dynamic database wiper (Developer 1-Click shortcut link)
+exports.wipeEntireDatabase = async (req, res) => {
+    try {
+        await Event.deleteMany({});
+        res.send("<h1 style='font-family:sans-serif; text-align:center; margin-top:100px; color:#10b981;'>🧹 Database Wiped Successfully!<br><span style='font-size:16px; color:#64748b;'>Please refresh your store page, click items, and check the dashboard.</span></h1>");
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+};
