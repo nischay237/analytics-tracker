@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApexStore - Developer Gear Hub</title>
+    <!-- Tailwind CSS CDN for visual premium layout -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans flex flex-col justify-between relative overflow-x-hidden">
+
+    <!-- 1. Interactive Navigation Header -->
+    <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur-md sticky top-0 z-50 shadow-md">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <button onclick="showStorefront()" class="flex items-center space-x-2 outline-none">
+                <span class="text-2xl">🛍️</span>
+                <span class="font-black text-xl tracking-wider text-white">ApexStore</span>
+            </button>
+            <nav class="hidden md:flex space-x-8 text-sm font-bold text-slate-400">
+                <button onclick="showStorefront()" class="hover:text-indigo-400 transition-all">Catalog</button>
+                <button onclick="showCartView()" class="hover:text-indigo-400 transition-all">Active Cart</button>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <button onclick="showCartView()" class="relative p-3 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl transition-all outline-none">
+                    <span>🛒</span>
+                    <span id="cart-badge" class="absolute -top-1.5 -right-1.5 bg-indigo-600 text-white text-[10px] font-extrabold h-5 w-5 rounded-full flex items-center justify-center border border-slate-950">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONSOLE VIEWS -->
+    <main class="flex-grow max-w-6xl w-full mx-auto px-6 py-10">
+
+        <!-- VIEW A: SHOP GRID -->
+        <div id="store-view" class="space-y-10">
+            <!-- Filter & Search Section -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-950 p-4 rounded-3xl border border-slate-800 shadow-sm">
+                <div class="flex flex-wrap gap-2" id="category-filters">
+                    <!-- Dynamic categories loaded here -->
+                </div>
+                <div class="relative">
+                    <input 
+                        type="text" 
+                        id="search-input" 
+                        placeholder="Search workspace gear..." 
+                        class="bg-slate-900 border border-slate-800 px-4 py-2.5 rounded-xl text-xs text-slate-300 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none w-full md:w-64"
+                    />
+                </div>
+            </div>
+
+            <!-- Shop Catalog Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="product-grid">
+                <!-- Product Card blocks -->
+            </div>
+        </div>
+
+        <!-- VIEW B: SINGLE PRODUCT DETAIL VIEWS (with Recommendations) -->
+        <div id="detail-view" class="hidden space-y-12">
+            <button onclick="showStorefront()" class="inline-flex items-center space-x-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs rounded-xl border border-slate-700 transition-all shadow-sm">
+                <span>← Back to Catalog</span>
+            </button>
+
+            <!-- Dynamic Product details -->
+            <div id="detail-content">
+                <!-- Content Injector -->
+            </div>
+
+            <!-- RELATED RECOMMENDATIONS GRID -->
+            <div class="space-y-6 pt-10 border-t border-slate-800">
+                <div>
+                    <h3 class="text-xl font-bold text-white flex items-center gap-2">🎁 Frequently Bought Together</h3>
+                    <p class="text-xs text-slate-500 mt-1">AI-recommended companion gadgets optimized for your developer workspace</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6" id="recommendations-grid">
+                    <!-- Dynamic Suggestions -->
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW C: DEDICATED FULL-PAGE CHECKOUT AND CART PAGE -->
+        <div id="cart-view" class="hidden max-w-4xl mx-auto space-y-8">
+            <div class="border-b border-slate-800 pb-4">
+                <h2 class="text-2xl font-black text-white flex items-center gap-2">🛒 Your Secure Shopping Cart</h2>
+                <p class="text-xs text-slate-500 mt-1">Review items and trigger real-time sales transactions</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+                {/* Left Side: Items List */}
+                <div class="md:col-span-2 space-y-4" id="checkout-cart-items">
+                    <!-- Dynamic Cart lists -->
+                </div>
+
+                {/* Right Side: Order summary Card */}
+                <div class="bg-slate-950 border border-slate-800 p-6 rounded-3xl space-y-6 shadow-xl sticky top-24">
+                    <h3 class="text-md font-bold text-white">Order Summary</h3>
+                    
+                    <div class="space-y-3.5 border-b border-slate-800 pb-4 text-xs font-semibold text-slate-400">
+                        <div class="flex items-center justify-between">
+                            <span>Shipping Charge</span>
+                            <span class="text-emerald-400">FREE</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span>Estimated Taxes</span>
+                            <span>$0.00</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between text-xs font-bold text-slate-400">
+                        <span>Grand Total</span>
+                        <span id="checkout-cart-total" class="text-lg font-black text-white">$0.00</span>
+                    </div>
+
+                    <button onclick="completeSecurePurchase()" class="w-full text-center py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-emerald-600/15 transition-all outline-none">
+                        Complete Secure Purchase
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 bg-slate-950 py-8">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs text-slate-500 font-semibold">
+            <p>© 2026 ApexStore Premium. Managed by Tracker.io integration metrics.</p>
+            <div class="flex space-x-6">
+                <button class="hover:text-slate-400">Privacy</button>
+                <button class="hover:text-slate-400">Terms</button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Storefront Logic Database -->
+    <script>
+        const storeProducts = [
+            {
+                id: 1,
+                title: "Apex ANC Wireless Headphones",
+                category: "Audio",
+                price: 199,
+                rating: "⭐⭐⭐⭐⭐ (48)",
+                excerpt: "Professional hybrid Active Noise Cancelling headphones configured for long focus developer hours.",
+                intro: "Immerse yourself into deep coding sessions with premium ANC optimization. Tuned specifically for remote workspaces or loud office floors, these wireless headphones deliver crystal clear acoustics and block ambient sounds.",
+                remaining: "Constructed with premium sound drivers and a robust polymer frame. Equipped with memory-foam ear cups, built-in dual microphone nodes, and a highly optimized battery life supporting up to 48 hours of uninterrupted performance.",
+                image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 2,
+                title: "Horizon Minimalist Smart Watch",
+                category: "Wearables",
+                price: 249,
+                rating: "⭐⭐⭐⭐ (32)",
+                excerpt: "Premium health and notification node configured for real-time vitals tracking at your wrist.",
+                intro: "Your personal developer console on your wrist. Monitor active heart rates, sleep stages, daily tracking statistics, and receive critical platform push notifications instantly without reaching for your phone.",
+                remaining: "Features a beautiful, responsive AMOLED always-on display wrapped inside high-grade aluminum. Highly water-resistant and supports customizable dials to match your digital setups perfectly.",
+                image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 3,
+                title: "Tactile Mechanical Keyboard 75%",
+                category: "Accessories",
+                price: 129,
+                rating: "⭐⭐⭐⭐⭐ (61)",
+                excerpt: "Hot-swappable custom silent linear switches configured for long typing sprints.",
+                intro: "Elevate your writing speed and tactile typing response. This compact 75% mechanical board features custom sound-dampened casing and linear switches to let you code comfortably without distracting teammates.",
+                remaining: "Includes standard hot-swappable linear keys supporting complete custom mapping. Dynamic RGB backlit options are integrated to coordinate standard layout indicators.",
+                image: "https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 4,
+                title: "Precision Precision Gaming Mouse",
+                category: "Accessories",
+                price: 79,
+                rating: "⭐⭐⭐⭐ (24)",
+                excerpt: "Ergonomic 26,000 DPI gaming mouse with custom macros tailored for designer viewports.",
+                intro: "Experience near-instant tracking speed with premium optical sensors. Perfect for detailed designers and UI layout engineers who require absolute coordinate precision across large high-resolution multi-monitor screens.",
+                remaining: "Equipped with custom macro layout triggers to automate recurring workflows. Highly optimized frame with tactile grips to reduce long-term muscle fatigue significantly.",
+                image: "https://images.unsplash.com/photo-1527698266440-12104e498b76?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 5,
+                title: "Apex UltraWide Curved Monitor 34\"",
+                category: "Monitors",
+                price: 499,
+                rating: "⭐⭐⭐⭐⭐ (19)",
+                excerpt: "34-inch screen calibrated for multi-column terminal configurations and visual design grids.",
+                intro: "Maximize your desktop real estate. This curved 21:9 monitor lets you organize codebase folders, terminals, console controls, and web preview frames in a unified, gorgeous, responsive panorama.",
+                remaining: "Features absolute IPS color accuracy calibrated for visual layouts. Equipped with dual-speaker panels, height adjustments, and high-power charging hub delivery outputs.",
+                image: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 6,
+                title: "Neural Standalone VR Headset",
+                category: "Wearables",
+                price: 599,
+                rating: "⭐⭐⭐⭐ (11)",
+                excerpt: "Immersive spatial computing glasses configured for three-dimensional visual validations.",
+                intro: "Step into spatial user interfaces instantly. This standalone visual headset maps flat tracking dimensions into three-dimensional coordinates, transforming any flat desk into a visual cockpit.",
+                remaining: "Powered by advanced standalone computing systems, removing the limit of external tethering cables. Features accurate hand-tracking cameras to deliver standard fluid visual responses.",
+                image: "https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&fit=crop&w=800&q=80"
+            }
+        ];
+
+        // Global State
+        let selectedCategory = 'All';
+        let searchTerm = '';
+        let cart = [];
+
+        // DOM elements
+        const productGrid = document.getElementById('product-grid');
+        const categoryFiltersContainer = document.getElementById('category-filters');
+        const searchInput = document.getElementById('search-input');
+        const storeView = document.getElementById('store-view');
+        const detailView = document.getElementById('detail-view');
+        const detailContent = document.getElementById('detail-content');
+        const cartView = document.getElementById('cart-view');
+        const checkoutItemsList = document.getElementById('checkout-cart-items');
+        const checkoutTotalDisplay = document.getElementById('checkout-cart-total');
+        const cartBadgeDisplay = document.getElementById('cart-badge');
+        const recommendationsGrid = document.getElementById('recommendations-grid');
+
+        const categories = ['All', ...new Set(storeProducts.map(p => p.category))];
+
+        function renderCategoryButtons() {
+            categoryFiltersContainer.innerHTML = categories.map(cat => `
+                <button 
+                    onclick="filterCategory('${cat}')"
+                    class="px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                        selectedCategory === cat 
+                            ? 'bg-indigo-600 text-white shadow-md' 
+                            : 'bg-slate-900 text-slate-400 hover:text-white hover:bg-slate-800'
+                    }"
+                >
+                    ${cat}
+                </button>
+            `).join('');
+        }
+
+        // Renders primary store catalog (Dual buttons integrated)
+        function renderProductCards() {
+            const filtered = storeProducts.filter(p => {
+                const matchesCat = selectedCategory === 'All' || p.category === selectedCategory;
+                const matchesSearch = p.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                                      p.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
+                return matchesCat && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                productGrid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-500 text-sm">No items found!</div>`;
+                return;
+            }
+
+            productGrid.innerHTML = filtered.map(p => `
+                <div 
+                    onclick="viewProduct(${p.id})" 
+                    class="bg-slate-950 rounded-3xl border border-slate-800 overflow-hidden flex flex-col justify-between hover:border-slate-700 transition-all group cursor-pointer shadow-sm hover:shadow-lg"
+                >
+                    <img src="${p.image}" class="w-full h-48 object-cover group-hover:scale-105 transition-all duration-300" />
+                    <div class="p-6 space-y-4 flex-grow flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between text-xs text-slate-500 font-bold">
+                                <span class="bg-indigo-500/10 border border-indigo-500/25 px-2.5 py-0.5 rounded-full text-indigo-400 uppercase">${p.category}</span>
+                                <span>$${p.price}</span>
