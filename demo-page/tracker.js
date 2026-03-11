@@ -35,3 +35,41 @@
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(payload)
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log(`✅ Server Status: ${response.status} - ${eventType} saved successfully!`);
+            } else {
+                console.warn(`❌ Server side error! Status: ${response.status}`);
+            }
+        })
+        .catch(error => {
+            console.error('❌ Tracker Connection Error:', error);
+        });
+    }
+
+    // Expose globally
+    window.trackerSendEvent = sendEvent;
+
+    // 4. Track Page View on Page Load
+    window.addEventListener('load', () => {
+        sendEvent('page_view');
+    });
+
+    // 5. Track Clicks with Coordinate logs
+    document.addEventListener('click', (event) => {
+        if (event.clientX === 0 && event.clientY === 0) return;
+
+        const normalizedX = Math.round((event.clientX / window.innerWidth) * 1920);
+        const normalizedY = Math.round((event.clientY / window.innerHeight) * 1080);
+
+        console.log(`🖱️ Click captured locally at X: ${normalizedX}, Y: ${normalizedY}`);
+
+        sendEvent('click', {
+            clickX: normalizedX,
+            clickY: normalizedY
+        });
+    });
+
+    console.log('⚡ Consolidated Tracker.io Script initialized.');
+})();
