@@ -262,3 +262,267 @@
                             <div class="flex items-center justify-between text-xs text-slate-500 font-bold">
                                 <span class="bg-indigo-500/10 border border-indigo-500/25 px-2.5 py-0.5 rounded-full text-indigo-400 uppercase">${p.category}</span>
                                 <span>$${p.price}</span>
+                            </div>
+                            <h3 class="text-md font-bold text-white group-hover:text-indigo-400 transition-all line-clamp-2">${p.title}</h3>
+                            <p class="text-xs text-slate-500 leading-relaxed line-clamp-3">${p.excerpt}</p>
+                        </div>
+                        
+                        <!-- NEW SPLIT USER ACTION CONTROLS -->
+                        <div class="flex items-center gap-2 pt-2 border-t border-slate-900">
+                            <button 
+                                onclick="addToCart(event, ${p.id})"
+                                class="flex-1 text-center py-2.5 bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold text-xs rounded-xl border border-slate-800 transition-all flex items-center justify-center gap-1"
+                            >
+                                <span>Add Cart 🛒</span>
+                            </button>
+                            <button 
+                                onclick="buyNow(event, ${p.id})"
+                                class="flex-1 text-center py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs rounded-xl transition-all shadow-md"
+                            >
+                                Buy Now ⚡
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.filterCategory = function(cat) {
+            selectedCategory = cat;
+            renderCategoryButtons();
+            renderProductCards();
+        };
+
+        // Debounced Search
+        let searchTimeout;
+        searchInput.addEventListener('input', (e) => {
+            searchTerm = e.target.value;
+            renderProductCards();
+
+            clearTimeout(searchTimeout);
+            if (searchTerm.trim() !== '') {
+                searchTimeout = setTimeout(() => {
+                    if (window.trackerSendEvent) {
+                        const baseUrl = window.location.href.split('?')[0].split('#')[0];
+                        const searchUrl = `${baseUrl}?search=${encodeURIComponent(searchTerm.trim())}`;
+                        window.trackerSendEvent('page_view', { pageUrl: searchUrl });
+                    }
+                }, 1000);
+            }
+        });
+
+        // VIEW INDIVIDUAL PRODUCT DETAILS & EMBED RECOMMENDATIONS BELOW
+        window.viewProduct = function(id) {
+            const product = storeProducts.find(p => p.id === id);
+            if (product) {
+                window.location.hash = `product-${id}`;
+
+                detailContent.innerHTML = `
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start bg-slate-950 p-8 rounded-3xl border border-slate-800 shadow-xl">
+                        <img src="${product.image}" class="w-full h-[400px] object-cover rounded-2xl border border-slate-800 shadow-lg" />
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-center justify-between text-xs text-slate-500 font-bold">
+                                <span class="bg-indigo-500/10 border border-indigo-500/25 px-2.5 py-0.5 rounded-full text-indigo-400 uppercase">${product.category}</span>
+                                <span>${product.rating}</span>
+                            </div>
+                            <h1 class="text-3xl font-black text-white leading-snug">${product.title}</h1>
+                            <p class="text-slate-300 leading-relaxed text-sm">${product.intro}</p>
+                            
+                            <!-- Specifications read-more block -->
+                            <div id="detail-read-more-wrapper" class="py-4 text-center border-t border-b border-slate-800 my-4">
+                                <p class="text-xs text-slate-500 mb-2">Detailed blueprints are collapsed below</p>
+                                <button 
+                                    id="detail-read-more-btn"
+                                    onclick="expandSpecs(${product.id})"
+                                    class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-indigo-400 font-bold text-xs rounded-xl border border-slate-800 transition-all uppercase tracking-wider"
+                                >
+                                    Read Blueprints ▼
+                                </button>
+                            </div>
+
+                            <div id="detail-remaining-content" class="hidden text-slate-300 leading-relaxed text-sm space-y-3">
+                                <p class="font-bold text-white text-xs border-l-2 border-indigo-500 pl-2">TECHNICAL DETAILS:</p>
+                                <p>${product.remaining}</p>
+                            </div>
+
+                            <div class="flex items-center justify-between pt-6 border-t border-slate-800">
+                                <span class="text-2xl font-black text-white">$${product.price}</span>
+                                <div class="flex gap-2">
+                                    <button 
+                                        onclick="addToCart(null, ${product.id})"
+                                        class="px-4 py-3 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-300 font-bold text-xs rounded-xl transition-all"
+                                    >
+                                        Add to Cart 🛒
+                                    </button>
+                                    <button 
+                                        onclick="buyNow(null, ${product.id})"
+                                        class="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-indigo-600/20 transition-all uppercase tracking-wider"
+                                    >
+                                        Buy Now ⚡
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // INJECT CUSTOM RECOMMENDATIONS (Filter items in same category, exclude current)
+                const recommendations = storeProducts
+                    .filter(p => p.category === product.category && p.id !== product.id)
+                    .concat(storeProducts.filter(p => p.category !== product.category)) // Fallbacks
+                    .slice(0, 3); // Get top 3
+
+                recommendationsGrid.innerHTML = recommendations.map(rec => `
+                    <div 
+                        onclick="viewProduct(${rec.id})"
+                        class="bg-slate-950 border border-slate-800/80 p-4 rounded-2xl hover:border-slate-700 transition-all cursor-pointer group flex gap-3 items-center"
+                    >
+                        <img src="${rec.image}" class="w-16 h-16 object-cover rounded-xl border border-slate-800" />
+                        <div class="min-w-0 flex-grow">
+                            <span class="text-[9px] font-black text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded-full uppercase">${rec.category}</span>
+                            <h4 class="text-xs font-bold text-white truncate mt-1 group-hover:text-indigo-400 transition-colors">${rec.title}</h4>
+                            <p class="text-xs text-slate-400 font-extrabold mt-0.5">$${rec.price}</p>
+                        </div>
+                    </div>
+                `).join('');
+
+                storeView.classList.add('hidden');
+                cartView.classList.add('hidden');
+                detailView.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                if (window.trackerSendEvent) {
+                    window.trackerSendEvent('page_view');
+                }
+            }
+        };
+
+        window.expandSpecs = function(id) {
+            document.getElementById('detail-remaining-content').classList.remove('hidden');
+            document.getElementById('detail-read-more-wrapper').classList.add('hidden');
+        };
+
+        window.showStorefront = function() {
+            window.location.hash = ''; 
+            detailView.classList.add('hidden');
+            cartView.classList.add('hidden');
+            storeView.classList.remove('hidden');
+            if (window.trackerSendEvent) {
+                window.trackerSendEvent('page_view');
+            }
+        };
+
+        // Cart Adding & Checkout Actions
+        window.addToCart = function(event, id) {
+            if (event) event.stopPropagation();
+            const product = storeProducts.find(p => p.id === id);
+            if (product) {
+                cart.push(product);
+                updateCartBadge();
+                alert(`🛒 Added to Cart: ${product.title}`);
+
+                if (window.trackerSendEvent) {
+                    window.trackerSendEvent('add_to_cart');
+                }
+            }
+        };
+
+        // BUY NOW TRIGGER: Direct redirect to checkout view page
+        window.buyNow = function(event, id) {
+            if (event) event.stopPropagation();
+            const product = storeProducts.find(p => p.id === id);
+            if (product) {
+                cart.push(product);
+                updateCartBadge();
+                showCartView(); // Redirects to checkout
+                
+                if (window.trackerSendEvent) {
+                    window.trackerSendEvent('add_to_cart');
+                }
+            }
+        };
+
+        window.showCartView = function() {
+            window.location.hash = 'cart';
+            detailView.classList.add('hidden');
+            storeView.classList.add('hidden');
+            cartView.classList.remove('hidden');
+            renderCartViewItems();
+
+            if (window.trackerSendEvent) {
+                window.trackerSendEvent('page_view');
+            }
+        };
+
+        function updateCartBadge() {
+            cartBadgeDisplay.innerText = cart.length;
+        }
+
+        function renderCartViewItems() {
+            if (cart.length === 0) {
+                checkoutItemsList.innerHTML = `<p class="text-xs text-slate-500 text-center py-12">Your cart is currently empty. Add gadgets on catalog to load checkout.</p>`;
+                checkoutTotalDisplay.innerText = "$0.00";
+                return;
+            }
+
+            let subtotal = 0;
+            checkoutItemsList.innerHTML = cart.map((item, idx) => {
+                subtotal += item.price;
+                return `
+                    <div class="flex items-center gap-4 bg-slate-950 border border-slate-800 p-4 rounded-2xl justify-between">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <img src="${item.image}" class="w-14 h-14 object-cover rounded-xl border border-slate-800" />
+                            <div class="min-w-0">
+                                <h4 class="text-sm font-bold text-white truncate">${item.title}</h4>
+                                <p class="text-xs text-indigo-400 font-extrabold mt-0.5">$${item.price}</p>
+                            </div>
+                        </div>
+                        <button onclick="removeFromCheckoutCart(${idx})" class="text-xs text-rose-500 hover:bg-rose-500/10 px-3 py-1.5 rounded-lg border border-rose-500/20 font-bold transition-colors flex-shrink-0">Remove</button>
+                    </div>
+                `;
+            }).join('');
+
+            checkoutTotalDisplay.innerText = `$${subtotal.toFixed(2)}`;
+        }
+
+        window.removeFromCheckoutCart = function(index) {
+            cart.splice(index, 1);
+            updateCartBadge();
+            renderCartViewItems();
+        };
+
+        // COMPLETE PURCHASE (Dynamic coordinates price multiplier hack)
+        window.completeSecurePurchase = function() {
+            if (cart.length === 0) {
+                alert("Cart empty!");
+                return;
+            }
+
+            // Calculate total price
+            let totalVal = 0;
+            cart.forEach(item => totalVal += item.price);
+
+            alert(`💳 Checkout Simulated!\n\nSuccess! Recorded Secure Sale worth: $${totalVal.toFixed(2)} on your dashboard.`);
+
+            // DYNAMIC COORDINATE PRICE MULTIPLIER HACK
+            // We pass clickX = 7777 (constant code to identify e-commerce transaction complete)
+            // We pass clickY = Math.round(totalVal) (actual dynamic revenue price!)
+            if (window.trackerSendEvent) {
+                window.trackerSendEvent('click', { clickX: 7777, clickY: Math.round(totalVal) });
+            }
+
+            cart = [];
+            updateCartBadge();
+            showStorefront();
+        };
+
+        renderCategoryButtons();
+        renderProductCards();
+    </script>
+
+    <!-- Connects to dynamic coordinate scaling and programmatic tracker hooks -->
+    <script src="tracker.js"></script>
+
+</body>
+</html>
