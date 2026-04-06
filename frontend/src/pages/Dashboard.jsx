@@ -351,3 +351,120 @@ function Dashboard() {
                     <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
                         <Calendar className="h-5 w-5 animate-bounce" />
                     </div>
+                    <div>
+                        <h3 className="text-lg font-black text-slate-900">📅 Weekly Performance Summary</h3>
+                        <p className="text-xs text-slate-500">Historical week-by-week aggregated logs of store traffic and orders completed</p>
+                    </div>
+                </div>
+
+                {weeklySummary.length === 0 ? (
+                    <p className="text-xs text-slate-400 text-center py-6">No historical records logged yet.</p>
+                ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {weeklySummary.map((summary, idx) => (
+                            <div key={idx} className="bg-slate-50 border border-slate-200/60 p-5 rounded-2xl hover:border-indigo-400 hover:bg-white hover:shadow-md transition-all cursor-default space-y-4">
+                                <div className="border-b border-slate-200 pb-2">
+                                    <p className="text-xs font-black text-slate-400 uppercase">Billing Timeline</p>
+                                    <p className="text-sm font-extrabold text-indigo-600 mt-0.5">{summary.week}</p>
+                                </div>
+                                <div className="grid grid-cols-2 gap-y-3 text-xs font-bold text-slate-600">
+                                    <div>
+                                        <p className="text-[10px] text-slate-400 font-semibold uppercase">Shoppers</p>
+                                        <p className="text-sm font-extrabold text-slate-900 mt-0.5">{summary.sessionsCount} Users</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] text-slate-400 font-semibold uppercase">Actions</p>
+                                        <p className="text-sm font-extrabold text-slate-900 mt-0.5">{summary.interactions} Clicks</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] text-slate-400 font-semibold uppercase">Orders</p>
+                                        <p className="text-sm font-extrabold text-slate-900 mt-0.5">{summary.orders} Sales</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] text-emerald-500 font-semibold uppercase">Revenues</p>
+                                        <p className="text-sm font-extrabold text-emerald-600 mt-0.5">${summary.revenue}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+
+            {/* Visual Charts Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm lg:col-span-2">
+                    <div className="mb-6">
+                        <h3 className="text-lg font-bold text-slate-900 flex items-center gap-1.5">
+                            <Activity className="h-5 w-5 text-indigo-500" />
+                            Visitor Acquisition Timeline
+                        </h3>
+                        <p className="text-xs text-slate-500">Chronological analysis of store visits and customer activity logs</p>
+                    </div>
+                    
+                    {chartData.length === 0 ? (
+                        <div className="h-64 flex items-center justify-center text-slate-400 text-sm">
+                            No visitor records captured.
+                        </div>
+                    ) : (
+                        <div className="h-64">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                                    <defs>
+                                        <linearGradient id="colorSessions" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#6366f1" stopOpacity={0.25}/>
+                                            <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
+                                        </linearGradient>
+                                    </defs>
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                    <XAxis dataKey="date" stroke="#94a3b8" fontSize={11} tickLine={false} />
+                                    <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} />
+                                    <Tooltip 
+                                        contentStyle={{ backgroundColor: '#1e293b', borderRadius: '16px', border: 'none', color: '#fff' }}
+                                        labelStyle={{ fontWeight: 'bold', color: '#818cf8' }}
+                                    />
+                                    <Area 
+                                        type="monotone" 
+                                        dataKey="Users" 
+                                        stroke="#6366f1" 
+                                        strokeWidth={3}
+                                        fillOpacity={1} 
+                                        fill="url(#colorSessions)" 
+                                    />
+                                </AreaChart>
+                            </ResponsiveContainer>
+                        </div>
+                    )}
+                </div>
+
+                {/* Device Donut Chart */}
+                <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <h3 className="text-lg font-bold text-slate-400 flex items-center gap-1.5">
+                            <Monitor className="h-5 w-5 text-slate-400" />
+                            Terminal Distribution
+                        </h3>
+                        <p className="text-xs text-slate-500">Demographics of shopper browser viewports</p>
+                    </div>
+
+                    <div className="h-48 my-4 flex justify-center">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                                <Pie
+                                    data={deviceChartData}
+                                    cx="50%"
+                                    cy="50%"
+                                    innerRadius={55}
+                                    outerRadius={75}
+                                    paddingAngle={5}
+                                    dataKey="value"
+                                >
+                                    {deviceChartData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={entry.color} />
+                                    ))}
+                                </Pie>
+                                <Tooltip />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </div>
+
