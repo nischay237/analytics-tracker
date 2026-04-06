@@ -233,3 +233,121 @@ function Dashboard() {
     };
 
     const deviceChartData = [
+        { name: 'Desktop', value: sessions.filter(s => getDeviceType(s.sessionId) === 'Desktop').length || 1, color: '#6366f1' },
+        { name: 'Mobile', value: sessions.filter(s => getDeviceType(s.sessionId) === 'Mobile').length || 0, color: '#10b981' },
+        { name: 'Tablet', value: sessions.filter(s => getDeviceType(s.sessionId) === 'Tablet').length || 0, color: '#f59e0b' }
+    ];
+
+    const getChartData = () => {
+        const grouped = sessions.reduce((acc, curr) => {
+            const date = new Date(curr.lastSeen).toLocaleDateString(undefined, { 
+                month: 'short', 
+                day: 'numeric' 
+            });
+            const existing = acc.find(item => item.date === date);
+            if (existing) {
+                existing.Users += 1;
+                existing.Events += curr.totalEvents;
+            } else {
+                acc.push({ date, Users: 1, Events: curr.totalEvents });
+            }
+            return acc;
+        }, []);
+        return grouped.sort((a, b) => new Date(a.date) - new Date(b.date));
+    };
+
+    const chartData = getChartData();
+
+    const funnelData = [
+        { name: '1. Product Views', users: totalUsers, fill: '#6366f1' },
+        { name: '2. Added to Cart', users: addtoCartUsersCount, fill: '#818cf8' },
+        { name: '3. Checkout Start', users: checkoutStartCount, fill: '#a5b4fc' },
+        { name: '4. Orders Complete', users: liveOrdersCount, fill: '#10b981' }
+    ];
+
+    if (loading) {
+        return (
+            <div className="space-y-6 animate-pulse max-w-7xl mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    {[1, 2, 3, 4].map(n => (
+                        <div key={n} className="h-32 bg-slate-200 rounded-2xl"></div>
+                    ))}
+                </div>
+                <div className="h-72 bg-slate-200 rounded-2xl"></div>
+                <div className="h-60 bg-slate-200 rounded-2xl"></div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="space-y-8 max-w-7xl mx-auto font-sans pb-12">
+            
+            {/* Top Interactive Banner */}
+            <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-6 rounded-3xl text-white shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="space-y-1">
+                    <h2 className="text-2xl font-black flex items-center gap-2">
+                        <Sparkles className="h-6 w-6 text-yellow-300 animate-spin" style={{ animationDuration: '6s' }} />
+                        E-Commerce Analytics Engine
+                    </h2>
+                    <p className="text-indigo-100 text-sm font-medium">
+                        Real-time visitor purchase signals, checkout tunnels & cart insights
+                    </p>
+                </div>
+                <span className="self-start md:self-center inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold bg-white/10 border border-white/20 backdrop-blur-md">
+                    <Calendar className="h-3.5 w-3.5 mr-1.5" /> Sales Timelines
+                </span>
+            </div>
+
+            {/* E-Commerce Real-Time KPI Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-emerald-100 transition-all duration-300 flex items-center justify-between group">
+                    <div>
+                        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Sales (Revenue)</p>
+                        <h3 className="text-3xl font-black text-slate-900 mt-1">${liveRevenue.toFixed(2)}</h3>
+                        <p className="text-xs text-emerald-500 font-bold mt-1">Live payments decrypted</p>
+                    </div>
+                    <div className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300">
+                        <DollarSign className="h-6 w-6" />
+                    </div>
+                </div>
+
+                <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-indigo-100 transition-all duration-300 flex items-center justify-between group">
+                    <div>
+                        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Average Order Value (AOV)</p>
+                        <h3 className="text-3xl font-black text-slate-900 mt-1">${aovValue.toFixed(2)}</h3>
+                        <p className="text-xs text-slate-400 mt-1">Simulated ticket averages</p>
+                    </div>
+                    <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">
+                        <ShoppingCart className="h-6 w-6" />
+                    </div>
+                </div>
+
+                <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-rose-100 transition-all duration-300 flex items-center justify-between group">
+                    <div>
+                        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Cart Abandonment</p>
+                        <h3 className="text-3xl font-black text-slate-900 mt-1">{cartAbandonmentRate}%</h3>
+                        <p className="text-xs text-rose-500 font-semibold mt-1">Dropped carts before checkout</p>
+                    </div>
+                    <div className="p-3 bg-rose-50 text-rose-600 rounded-2xl group-hover:bg-rose-600 group-hover:text-white transition-all duration-300">
+                        <Percent className="h-6 w-6" />
+                    </div>
+                </div>
+
+                <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-amber-100 transition-all duration-300 flex items-center justify-between group">
+                    <div>
+                        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Conversion Rate</p>
+                        <h3 className="text-3xl font-black text-slate-900 mt-1">{conversionRate}%</h3>
+                        <p className="text-xs text-slate-400 mt-1">Visitor to Checkout ratio</p>
+                    </div>
+                    <div className="p-3 bg-amber-50 text-amber-600 rounded-2xl group-hover:bg-amber-600 group-hover:text-white transition-all duration-300">
+                        <Target className="h-6 w-6" />
+                    </div>
+                </div>
+            </div>
+
+            {/* DYNAMIC NEW FEATURE: WEEKLY SUMMARY BREAKDOWN CARDS */}
+            <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-5">
+                <div className="flex items-center gap-2 pb-3 border-b border-slate-100">
+                    <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
+                        <Calendar className="h-5 w-5 animate-bounce" />
+                    </div>
