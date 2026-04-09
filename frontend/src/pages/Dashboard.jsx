@@ -468,3 +468,121 @@ function Dashboard() {
                         </ResponsiveContainer>
                     </div>
 
+                    <div className="grid grid-cols-3 gap-2 text-center text-[10px] font-bold text-slate-600 uppercase">
+                        {deviceChartData.map((d, i) => (
+                            <div key={i} className="flex flex-col items-center bg-slate-50 p-2.5 rounded-2xl border border-slate-100">
+                                <span className="w-2.5 h-2.5 rounded-full mb-1" style={{ backgroundColor: d.color }}></span>
+                                <span>{d.name} ({d.value})</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            {/* Shopping Checkout Funnel & Conversion Insights */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                {/* 1. Recharts checkout funnel visualization */}
+                <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm lg:col-span-2">
+                    <div className="mb-4">
+                        <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                            <ShoppingCart className="h-5 w-5 text-indigo-500" />
+                            Checkout Funnel Drop-off Analysis
+                        </h3>
+                        <p className="text-xs text-slate-500">
+                            Identify exactly where store visitors drop off before purchasing products
+                        </p>
+                    </div>
+
+                    <div className="h-64">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={funnelData} layout="vertical" margin={{ top: 10, right: 10, left: 30, bottom: 0 }}>
+                                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
+                                <XAxis type="number" stroke="#94a3b8" fontSize={11} tickLine={false} />
+                                <YAxis dataKey="name" type="category" stroke="#475569" fontSize={11} width={130} tickLine={false} />
+                                <Tooltip />
+                                <Bar dataKey="users" radius={[0, 8, 8, 0]}>
+                                    {funnelData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={entry.fill} />
+                                    ))}
+                                </Bar>
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+
+                {/* 2. Conversion and hot focal coordinates panel */}
+                <div className="bg-slate-900 text-white p-6 rounded-3xl border border-slate-800 shadow-xl flex flex-col justify-between">
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-md font-bold text-slate-100 flex items-center gap-1.5">
+                                <Cpu className="h-5 w-5 text-indigo-400 animate-pulse" />
+                                Friction & Hotspot Insight
+                            </h3>
+                            <span className="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2.5 py-0.5 rounded-full text-[10px] font-bold">
+                                Live Engine
+                            </span>
+                        </div>
+
+                        <div className="bg-slate-850 border border-slate-800 p-4 rounded-2xl flex items-center gap-4">
+                            <div>
+                                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Goal Conversion Rate</p>
+                                <p className="text-3xl font-black text-slate-100 mt-1">{insights.rate}%</p>
+                            </div>
+                            <div className="p-3 bg-indigo-500/20 text-indigo-400 rounded-xl">
+                                <Target className="h-5 w-5" />
+                            </div>
+                        </div>
+
+                        <div className="space-y-2 text-xs text-slate-300">
+                            <p className="font-semibold text-slate-200">Main Action Hotspot:</p>
+                            <p className="text-slate-400 leading-relaxed">
+                                Most of your overall shopper clicks are clustered in the viewport coordinate:
+                            </p>
+                            <div className="inline-block bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-xl text-indigo-300 font-mono font-bold">
+                                X: {insights.hotspotX}, Y: {insights.hotspotY}
+                            </div>
+                            <p className="text-[10px] text-slate-500 italic leading-normal">
+                                *This center focal range indicates checkout triggers or active product card filters.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="border-t border-slate-800 pt-4 mt-4 flex items-center gap-2 text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+                        <Monitor className="h-4 w-4" />
+                        <span>Interactive UI Elements Optimized.</span>
+                    </div>
+                </div>
+            </div>
+
+            {/* Universal Session List Panel */}
+            <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+                <div className="p-6 border-b border-slate-100">
+                    <h3 className="text-lg font-bold text-slate-900">Active User Sessions</h3>
+                    <p className="text-xs text-slate-500">Unified timeline logs of visitor duration and interaction events</p>
+                </div>
+
+                {sessions.length === 0 ? (
+                    <div className="p-12 text-center text-slate-500 bg-slate-50/50">
+                        <p className="text-sm">No visitor events recorded yet.</p>
+                        <p className="text-xs text-slate-400 mt-1">Deploy the snippet on your webpages to generate visitor activity logs.</p>
+                    </div>
+                ) : (
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left border-collapse">
+                            <thead>
+                                <tr className="bg-slate-50/75 border-b border-slate-100 text-slate-500 text-xs font-semibold uppercase tracking-wider">
+                                    <th className="px-6 py-4">Session / User ID</th>
+                                    <th className="px-6 py-4">Device</th>
+                                    <th className="px-6 py-4">Interactions</th>
+                                    <th className="px-6 py-4">Session Duration</th>
+                                    <th className="px-6 py-4">Last Active</th>
+                                    <th className="px-6 py-4 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100">
+                                {[...sessions].sort((a, b) => new Date(b.lastSeen) - new Date(a.lastSeen)).map(s => (
+                                    <tr key={s.sessionId} className="hover:bg-slate-50/50 transition-colors">
+                                        <td className="px-6 py-4">
+                                            <div className="flex items-center space-x-2">
+                                                <span className="h-2 w-2 rounded-full bg-indigo-500 animate-pulse"></span>
