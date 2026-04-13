@@ -586,3 +586,120 @@ function Dashboard() {
                                         <td className="px-6 py-4">
                                             <div className="flex items-center space-x-2">
                                                 <span className="h-2 w-2 rounded-full bg-indigo-500 animate-pulse"></span>
+                                                <span className="font-mono text-xs text-slate-600 font-medium">
+                                                    {s.sessionId.substring(0, 18)}...
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <span className="text-xs font-semibold text-slate-600">
+                                                {getDeviceType(s.sessionId)}
+                                            </span>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
+                                                {s.totalEvents} events
+                                            </span>
+                                        </td>
+                                        <td className="px-6 py-4 text-xs font-medium text-slate-700">
+                                            <span className="inline-flex items-center gap-1">
+                                                <Clock className="h-3.5 w-3.5 text-slate-400" />
+                                                {getSessionDuration(s)}
+                                            </span>
+                                        </td>
+                                        <td className="px-6 py-4 text-xs text-slate-500">
+                                            {new Date(s.lastSeen).toLocaleString(undefined, {
+                                                dateStyle: 'medium',
+                                                timeStyle: 'short'
+                                            })}
+                                        </td>
+                                        <td className="px-6 py-4 text-right">
+                                            <Link 
+                                                to={`/session/${s.sessionId}`} 
+                                                className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-600 font-semibold text-xs transition-colors"
+                                            >
+                                                <span>View Journey</span>
+                                                <ArrowRight className="h-3 w-3" />
+                                            </Link>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </div>
+
+            {/* DUAL COUMNS PANEL FOR PRODUCT SPEC CLICKS & STORE SEARCH KEYWORDS */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                {/* A. Product Specifications Blueprints Stats */}
+                <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+                    <div className="flex items-center gap-2 pb-3 border-b border-slate-50">
+                        <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
+                            <BookOpen className="h-5 w-5 animate-pulse" />
+                        </div>
+                        <div>
+                            <h3 className="text-sm font-black text-slate-800">📖 Technical Blueprint Expansions</h3>
+                            <p className="text-[11px] text-slate-400 font-semibold">User paragraph expansions on specs inside product details</p>
+                        </div>
+                    </div>
+
+                    {readMoreStats.length === 0 ? (
+                        <p className="text-xs text-slate-400 py-6 text-center">No spec expansions logged yet.</p>
+                    ) : (
+                        <div className="grid grid-cols-2 gap-3">
+                            {readMoreStats.map((stat, i) => (
+                                <div key={i} className="bg-slate-50 border border-slate-100 p-3 rounded-2xl flex items-center justify-between hover:border-indigo-400 hover:bg-white transition-all cursor-default">
+                                    <div className="flex items-center gap-2 min-w-0">
+                                        <span className="text-lg bg-white p-1 rounded-lg border border-slate-100">{stat.icon}</span>
+                                        <h4 className="text-xs font-bold text-slate-700 truncate">{stat.name}</h4>
+                                    </div>
+                                    <span className="text-[10px] font-black text-indigo-600 uppercase bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-100">
+                                        {stat.count} Reads
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
+                {/* B. Live Grouped Store Search Keywords */}
+                <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+                    <div className="flex items-center gap-2 pb-3 border-b border-slate-50">
+                        <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
+                            <Search className="h-5 w-5 animate-pulse" />
+                        </div>
+                        <div>
+                            <h3 className="text-sm font-black text-slate-800">🔍 Shopper Search Logs</h3>
+                            <p className="text-[11px] text-slate-400 font-semibold">Live keywords inputted in store catalog search filters</p>
+                        </div>
+                    </div>
+
+                    {searchedKeywords.length === 0 ? (
+                        <div className="h-32 flex flex-col items-center justify-center text-center text-slate-400 space-y-2">
+                            <p class="text-xs text-slate-400">No search query logs detected in database yet.</p>
+                            <p class="text-[10px] text-slate-500">Go to your store catalog, search product names, and check back!</p>
+                        </div>
+                    ) : (
+                        <div className="flex flex-wrap gap-2.5">
+                            {searchedKeywords.map((word, i) => (
+                                <div key={i} className="inline-flex items-center gap-2 bg-slate-50 hover:bg-white hover:border-indigo-500/40 border border-slate-200 px-3.5 py-1.5 rounded-full transition-all duration-200 cursor-default shadow-sm group">
+                                    <span class="text-xs text-slate-700 font-bold group-hover:text-indigo-600">"{word.text}"</span>
+                                    <span class="text-[9px] font-extrabold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full uppercase border border-indigo-200/50">
+                                        {word.count} searches
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
+            </div>
+            
+        </div>
+    );
+}
+
+export default Dashboard;
+
