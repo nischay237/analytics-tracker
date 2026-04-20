@@ -322,3 +322,165 @@ function Heatmap() {
                                         {clicks.map((click, idx) => (
                                             <div
                                                 key={idx}
+                                                className="absolute rounded-full pointer-events-auto transition-transform hover:scale-125 cursor-help"
+                                                style={{
+                                                    left: `${(click.clickX / 1920) * 100}%`,
+                                                    top: `${(click.clickY / 1080) * 100}%`,
+                                                    width: `${spotSize}px`,
+                                                    height: `${spotSize}px`,
+                                                    background: 'radial-gradient(circle, rgba(239,68,68,1) 0%, rgba(245,158,11,0.6) 40%, rgba(16,185,129,0) 80%)',
+                                                }}
+                                                title={`Coordinate Nodes: X: ${click.clickX}, Y: ${click.clickY}`}
+                                            ></div>
+                                        ))}
+                                    </div>
+
+                                    {clicks.length === 0 && (
+                                        <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-500 space-y-2 z-30 bg-slate-950/80 backdrop-blur-sm">
+                                            <AlertCircle className="h-8 w-8 text-slate-600 animate-bounce" />
+                                            <p className="text-sm font-bold text-slate-300">No events captured on this URL yet</p>
+                                            <p className="text-xs text-slate-500">Go to your demo page, click several elements, and refresh.</p>
+                                        </div>
+                                    )}
+                                </div>
+
+                            </div>
+                        )}
+                    </div>
+
+                    {/* NEW SECTION: INSTANT HEATMAP AUDIT & INTELLIGENT E-COMMERCE REPORT */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        
+                        {/* 1. Mapped Storefront Product Heatmap Ranking */}
+                        <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm lg:col-span-2 space-y-4">
+                            <div className="flex items-center justify-between border-b border-slate-50 pb-3">
+                                <div>
+                                    <h3 className="text-md font-extrabold text-slate-800 flex items-center gap-1.5">
+                                        <Sparkles className="h-4 w-4 text-indigo-500 animate-spin" style={{ animationDuration: '6s' }} />
+                                        Interactive Product Clicks Rankings
+                                    </h3>
+                                    <p className="text-xs text-slate-400">Click coordinates mapped directly to storefront items in real-time</p>
+                                </div>
+                                <span className="bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full text-[10px] font-bold uppercase">
+                                    Catalog Audit
+                                </span>
+                            </div>
+
+                            {clicks.length === 0 ? (
+                                <div className="h-48 flex items-center justify-center text-xs text-slate-400">
+                                    No dynamic clicks available. Generate clicks inside ApexStore to load catalog ranking trends.
+                                </div>
+                            ) : (
+                                <div className="space-y-3">
+                                    {report.rankedProducts.map((art, idx) => {
+                                        const share = clicks.length > 0 ? Math.round((art.count / clicks.length) * 100) : 0;
+                                        return (
+                                            <div key={idx} className="flex items-center justify-between gap-4 p-2.5 rounded-xl hover:bg-slate-50 transition-colors">
+                                                <div className="flex items-center gap-3 min-w-0">
+                                                    <span className="text-lg bg-slate-100 p-2 rounded-lg">{art.icon}</span>
+                                                    <div className="min-w-0">
+                                                        <p className="text-xs font-bold text-slate-800 truncate">{art.name}</p>
+                                                        <p className="text-[10px] text-slate-400 font-semibold">{art.count} clicks recorded</p>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex items-center gap-2 flex-shrink-0">
+                                                    <div className="w-16 bg-slate-100 h-2 rounded-full overflow-hidden hidden sm:block">
+                                                        <div className="bg-indigo-600 h-full rounded-full" style={{ width: `${share}%` }}></div>
+                                                    </div>
+                                                    <span className="text-xs font-extrabold text-slate-700 bg-slate-100 px-2 py-1 rounded-md">{share}%</span>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* 2. E-Commerce Buying Intent & Hover Warnings panel */}
+                        <div className="bg-slate-900 text-white p-6 rounded-3xl flex flex-col justify-between shadow-lg">
+                            <div className="space-y-5">
+                                <div className="flex items-center justify-between">
+                                    <h3 className="text-sm font-black text-slate-100 flex items-center gap-1.5">
+                                        <Compass className="h-4 w-4 text-orange-400 animate-spin" style={{ animationDuration: '10s' }} />
+                                        Buying Intent Audit
+                                    </h3>
+                                    <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-0.5 rounded-full text-[9px] font-bold animate-pulse">
+                                        Live Summary
+                                    </span>
+                                </div>
+
+                                <div className="space-y-3.5">
+                                    {/* Bounce Rate */}
+                                    <div className="bg-slate-800/50 border border-slate-800/80 p-3.5 rounded-2xl flex items-center gap-3">
+                                        <div className="p-2 bg-rose-500/10 text-rose-400 rounded-xl">
+                                            <TrendingDown className="h-4 w-4" />
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Shopper Drop-Offs</p>
+                                            <p className="text-sm font-black text-slate-100 mt-0.5">
+                                                {report.bounceRate}% bounce rate
+                                            </p>
+                                            <p className="text-[9px] text-slate-500 leading-normal">Exited catalog within 40 seconds without any product selections.</p>
+                                        </div>
+                                    </div>
+
+                                    {/* Predictive Purchase probability */}
+                                    <div className="bg-slate-800/50 border border-slate-800/80 p-3.5 rounded-2xl flex items-center gap-3">
+                                        <div className="p-2 bg-emerald-500/10 text-emerald-400 rounded-xl">
+                                            <Sparkles className="h-4 w-4 text-emerald-400" />
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Purchase Probability</p>
+                                            <p className="text-sm font-black text-slate-100 mt-0.5">🚀 {report.buyChance}% Chance</p>
+                                            <p className="text-[9px] text-slate-500 leading-normal">Projected purchase conversion rate of your top performing gadget based on click densities.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Hotspot Friction Alert */}
+                                {report.winner && report.winner.count > 0 && (
+                                    <div className="space-y-1 bg-slate-950 p-4 rounded-2xl border border-slate-800">
+                                        <p className="text-[10px] text-amber-400 font-extrabold uppercase flex items-center gap-1.5">
+                                            <AlertCircle className="h-3.5 w-3.5" /> Most Hovered & Active Product
+                                        </p>
+                                        <p className="text-[11px] text-slate-300 leading-relaxed mt-1">
+                                            Shoppers are heavily interacting with: <br />
+                                            <strong className="text-white">"{report.winner.name}"</strong> <br />
+                                            This captures <span className="text-emerald-400">{Math.round((report.winner.count / clicks.length) * 100)}%</span> of total store attention. High chance of checkout conversion!
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="border-t border-slate-850 pt-4 mt-4 flex items-center gap-2 text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+                                <BookOpen className="h-4 w-4 text-slate-600" />
+                                <span>UX Layout highly optimized.</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div className="flex items-center gap-2.5 text-xs text-slate-400 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        <Compass className="h-4 w-4 text-indigo-500 flex-shrink-0 animate-spin" style={{ animationDuration: '8s' }} />
+                        <span>Hover over hotspots to view standard coordinate data. Use the sliders above to adjust the visual scale & background overlay depth of your simulation.</span>
+                    </div>
+                </div>
+            ) : (
+                <div className="bg-slate-50 border-2 border-dashed border-slate-200 p-16 rounded-3xl text-center space-y-4">
+                    <div className="h-12 w-12 bg-white border border-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto shadow-md">
+                        <Flame className="h-6 w-6 animate-pulse" />
+                    </div>
+                    <div>
+                        <p className="text-sm font-black text-slate-700">Choose a target website page first</p>
+                        <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
+                            Please select a captured URL from the dropdown menu above to render and overlay the visual thermal interaction map.
+                        </p>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
+
+export default Heatmap;
