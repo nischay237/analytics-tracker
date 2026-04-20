@@ -160,3 +160,165 @@ function Heatmap() {
                     </h2>
                     <p className="text-sm text-slate-500 mt-1">
                         Analyze visual thermal patterns of user interactions layered on your source page
+                    </p>
+                </div>
+            </div>
+
+            {/* Selector Card & Clicks Count */}
+            <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+                    <div className="flex-grow">
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-1.5">
+                            <Layers className="h-4 w-4 text-indigo-500" />
+                            Select Captured Page URL:
+                        </label>
+                        <select
+                            value={selectedPage}
+                            onChange={(e) => setSelectedPage(e.target.value)}
+                            className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-slate-700 font-bold focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:bg-white outline-none transition-all cursor-pointer shadow-inner"
+                        >
+                            <option value="">-- Choose a website/page to analyze --</option>
+                            {pages.map(p => (
+                                <option key={p} value={p}>{p}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {selectedPage && (
+                        <div className="flex items-center gap-4 self-start lg:self-auto">
+                            <div className="bg-indigo-500 text-white px-6 py-4 rounded-2xl flex items-center gap-5 shadow-lg shadow-indigo-500/20">
+                                <div>
+                                    <p className="text-[10px] text-indigo-200 font-black uppercase tracking-wider">Total Captured Clicks</p>
+                                    <p className="text-2xl font-black mt-0.5">{clicks.length} Clicks</p>
+                                </div>
+                                <div className="p-2.5 bg-white/10 rounded-xl">
+                                    <MousePointer className="h-5 w-5" />
+                                </div>
+                            </div>
+
+                            <button 
+                                onClick={handleReset}
+                                className="bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 hover:border-rose-300 p-4 rounded-2xl transition-all shadow-sm flex items-center justify-center gap-2"
+                                title="Reset Heatmap Data"
+                            >
+                                <Trash2 className="h-5 w-5" />
+                                <span className="hidden sm:inline text-xs font-bold uppercase tracking-wider">Reset Data</span>
+                            </button>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* Heatmap Canvas Container */}
+            {selectedPage ? (
+                <div className="space-y-8">
+                    
+                    {/* Visualizer Block */}
+                    <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+                        
+                        {/* Interactive Controls Toolbar */}
+                        <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div className="flex items-center gap-3">
+                                <SlidersHorizontal className="h-5 w-5 text-indigo-500" />
+                                <span className="text-sm font-bold text-slate-700">Heatmap Visual Controls</span>
+                            </div>
+
+                            <div className="flex flex-wrap items-center gap-6">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-xs font-bold text-slate-500">Backdrop:</span>
+                                    <div className="inline-flex rounded-xl bg-slate-200 p-1">
+                                        <button
+                                            onClick={() => setShowIframe(true)}
+                                            className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all ${
+                                                showIframe 
+                                                    ? 'bg-white text-indigo-600 shadow-sm' 
+                                                    : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                                            }`}
+                                        >
+                                            <Globe className="h-3.5 w-3.5" />
+                                            Live Website
+                                        </button>
+                                        <button
+                                            onClick={() => setShowIframe(false)}
+                                            className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all ${
+                                                !showIframe 
+                                                    ? 'bg-white text-indigo-600 shadow-sm' 
+                                                    : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                                            }`}
+                                        >
+                                            <Monitor className="h-3.5 w-3.5" />
+                                            Dark Blueprint
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {showIframe && (
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-xs font-bold text-slate-500 flex items-center gap-1">
+                                            <Eye className="h-3.5 w-3.5" /> Web Opacity:
+                                        </span>
+                                        <input 
+                                            type="range" 
+                                            min="0.1" 
+                                            max="0.9" 
+                                            step="0.1"
+                                            value={iframeOpacity} 
+                                            onChange={(e) => setIframeOpacity(parseFloat(e.target.value))}
+                                            className="w-24 accent-indigo-600 cursor-pointer"
+                                        />
+                                        <span className="text-xs font-bold text-slate-700 w-8">{(iframeOpacity * 100).toFixed(0)}%</span>
+                                    </div>
+                                )}
+
+                                <div className="flex items-center gap-3">
+                                    <span className="text-xs font-bold text-slate-500 flex items-center gap-1">
+                                        <Maximize2 className="h-3.5 w-3.5" /> Glow Size:
+                                    </span>
+                                    <input 
+                                        type="range" 
+                                        min="20" 
+                                        max="60" 
+                                        step="5"
+                                        value={spotSize} 
+                                        onChange={(e) => setSpotSize(parseInt(e.target.value, 10))}
+                                        className="w-24 accent-indigo-600 cursor-pointer"
+                                    />
+                                    <span className="text-xs font-bold text-slate-700 w-8">{spotSize}px</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {loading ? (
+                            <div className="h-[600px] flex flex-col items-center justify-center space-y-3 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200 animate-pulse">
+                                <div className="h-8 w-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+                                <p className="text-sm font-medium text-slate-500">Retrieving click nodes...</p>
+                            </div>
+                        ) : (
+                            /* Outer Scrollable Wrapper (Synchronized scrolling!) */
+                            <div className="relative overflow-y-auto rounded-2xl border border-slate-200 shadow-inner max-h-[600px]">
+                                
+                                {/* Inner Display Frame - Expanded to standard normalized height 1080px */}
+                                <div
+                                    className="relative bg-slate-950 transition-all duration-300"
+                                    style={{ 
+                                        width: '100%', 
+                                        height: '1080px', 
+                                        backgroundImage: 'radial-gradient(rgba(255,255,255,0.06) 1.5px, transparent 1.5px)',
+                                        backgroundSize: '24px 24px'
+                                    }}
+                                >
+                                    {/* Dynamic Background Iframe (Stretched to 1080px to disable internal scroll) */}
+                                    {showIframe && (
+                                        <iframe 
+                                            src={selectedPage} 
+                                            className="absolute inset-0 w-full h-[1080px] border-none pointer-events-none select-none transition-all duration-300"
+                                            style={{ opacity: iframeOpacity }}
+                                            title="Live Website Overlay Backdrop"
+                                        />
+                                    )}
+
+                                    {/* Clicks Layer mapped over the full 1080px height */}
+                                    <div className="absolute inset-0 z-20 pointer-events-none">
+                                        {clicks.map((click, idx) => (
+                                            <div
+                                                key={idx}
