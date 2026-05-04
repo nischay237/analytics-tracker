@@ -131,3 +131,136 @@ function TrackerBot() {
                     reply = `💰 **Store Financial Revenue:**\n• Dynamic Total Revenue: **$${dynamicRevenue}**\n• High value conversions: Concentrated around monitors and wearable gadgets.`;
                     break;
                 case 'sales':
+                    reply = `📈 **Store Sales Metrics:**\n• Executed Transactions: **${completedOrders} sales units**\n• Peak sales times: Corresponding to evening testing window hours (6 PM - 9 PM).`;
+                    break;
+                case 'conv_rate':
+                    reply = `🎯 **Store Conversion Rate:**\n• Conversion Rate: **${conversionRate}%** (Calculated based on orders completed divided by total catalog traffic).\n\nThis rate is healthy and aligned with SaaS electronic stores.`;
+                    break;
+                case 'aov':
+                    reply = `⏱ **Average Order Value (AOV):**\n• Standard AOV: **$${completedOrders > 0 ? ticketValue : 0}**\n\n*Strategy to scale AOV:* Package Tactile Mechanical Keyboards with precision gaming mice as custom bundles!`;
+                    break;
+
+                // Category D: Product & Marketing Analysis
+                case 'top_sell':
+                    reply = `🏆 **Top Selling Products:**\n• **Winner:** *Apex ANC Wireless Headphones*\n• **Runner-up:** *Tactile Mechanical Keyboard 75%*\n\nThese items hold the highest share of complete secure checkout events in your logs.`;
+                    break;
+                case 'low_perf':
+                    reply = `🔻 **Low Performing Products:**\n• **Lowest engagement:** *The 2-Minute Rule for Developer Productivity*.\n\nUsers exit within 40 seconds of reading. Suggest re-vamping content hooks or adding video references.`;
+                    break;
+                case 'engagement':
+                    reply = `📊 **Product Engagement Index:**\n• Average actions rate: **${avgActivity} interactions/session**.\n• Hot spot intensity focuses predominantly on category filters (Audio & Accessories).`;
+                    break;
+                case 'recom':
+                    reply = `🧠 **Product Recommendations Performance:**\n• Recommendations CTR: **~12%**\n• Purchase conversion after recommendation click: **5%**.\n\nThe "Frequently Bought Together" widget under detail views shows the highest traction.`;
+                    break;
+                case 'cart_analysis':
+                    reply = `🛒 **Detailed Cart Abandonment Analysis:**\n• Cart Abandonment Rate is **${cartAbandonment}%**.\n• Out of ${cartAdds} carts created, **${cartAdds - completedOrders} users** left without completing the checkout flow.\n\n*Audit:* 80% of abandoned users clicked on coordinates around standard exit folds (Y >= 850). Optimize mobile button responsiveness here.`;
+                    break;
+
+                default:
+                    reply = "I'm reviewing your database. Select any metrics parameter from the left side panel to audit your e-commerce platform performance!";
+            }
+
+            setMessages(prev => [...prev, { sender: 'bot', text: reply }]);
+            setIsTyping(false);
+        }, 1000);
+    };
+
+    const handleSend = (e) => {
+        e.preventDefault();
+        if (!input.trim()) return;
+
+        const userMsg = input.trim();
+        setMessages(prev => [...prev, { sender: 'user', text: userMsg }]);
+        setInput('');
+        setIsTyping(true);
+
+        setTimeout(() => {
+            const query = userMsg.toLowerCase();
+            let reply = "I've scanned your local collections. Click on the 24 audit queries in the left panel to execute deep conversational analyses!";
+            
+            if (query.includes('hello') || query.includes('hi')) {
+                reply = "Hello! I am your real-time Tracker Copilot. Please select any of the conversational or quantitative queries on the left panel to explore your e-commerce data!";
+            } else if (query.includes('revenue') || query.includes('sales') || query.includes('money')) {
+                reply = `According to live MongoDB checkout logs, you have accumulated a total of **$${dynamicRevenue} in sales** across **${completedOrders} orders**.`;
+            } else if (query.includes('visitor') || query.includes('user')) {
+                reply = `We have logged **${totalSessions} unique visitors** in this testing session database.`;
+            } else if (query.includes('bounce')) {
+                reply = `The bounce rate calculation stands at **${bounceRate}%** based on users exiting with limited page interactions.`;
+            }
+
+            setMessages(prev => [...prev, { sender: 'bot', text: reply }]);
+            setIsTyping(false);
+        }, 1200);
+    };
+
+    const clearChat = () => {
+        setMessages([
+            {
+                sender: 'bot',
+                text: "Chat history cleared. Please select any metric block to execute a live database audit."
+            }
+        ]);
+    };
+
+    return (
+        <div className="space-y-6 max-w-7xl mx-auto h-[calc(100vh-140px)] flex flex-col justify-between font-sans">
+            
+            {/* Top Bar Header */}
+            <div className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm flex items-center justify-between flex-shrink-0">
+                <div className="flex items-center space-x-3">
+                    <div className="p-2.5 bg-indigo-50 text-indigo-600 rounded-2xl animate-pulse">
+                        <Bot className="h-6 w-6" />
+                    </div>
+                    <div>
+                        <h2 className="text-lg font-black text-slate-900">🤖 Tracker Bot v2.0</h2>
+                        <p className="text-xs text-slate-400 font-medium">Conversational E-Commerce Database Copilot</p>
+                    </div>
+                </div>
+
+                <button 
+                    onClick={clearChat}
+                    className="p-2.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-all"
+                    title="Clear Chat History"
+                >
+                    <Trash2 className="h-5 w-5" />
+                </button>
+            </div>
+
+            {/* Main Chat Interface */}
+            <div className="flex-1 bg-white border border-slate-100 rounded-3xl shadow-sm flex flex-col lg:flex-row overflow-hidden min-h-0">
+                
+                {/* Left Side: 24 Categorized Collapsible Action Panels */}
+                <div className="w-full lg:w-96 border-b lg:border-b-0 lg:border-r border-slate-100 p-6 flex flex-col space-y-4 bg-slate-50/50 flex-shrink-0 overflow-y-auto">
+                    
+                    <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-slate-400 mb-2">
+                        <Sparkles className="h-4 w-4 text-indigo-500 animate-spin" style={{ animationDuration: '4s' }} />
+                        <span>Interactive Audits ({24} Parameters)</span>
+                    </div>
+
+                    <div className="space-y-3">
+                        
+                        {/* CATEGORY 1: Conversational Audits (Qualitative) */}
+                        <div className="border border-slate-200 bg-white rounded-2xl overflow-hidden">
+                            <button 
+                                onClick={() => toggleCategory('qualitative')}
+                                className="w-full p-4 flex items-center justify-between font-bold text-xs text-slate-700 bg-slate-50 border-b border-slate-150 outline-none"
+                            >
+                                <span className="flex items-center gap-1.5">💡 Conversational Audits</span>
+                                {expandedCats.qualitative ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                            </button>
+                            {expandedCats.qualitative && (
+                                <div className="p-3 flex flex-col gap-1.5 bg-white">
+                                    <button onClick={() => handleQuickAction('q_bounce', 'Why is my bounce rate high?')} className="p-2 border border-slate-100 hover:border-indigo-400 rounded-xl text-left text-[11px] font-bold text-slate-700 hover:text-indigo-600 transition-all">❓ Why is bounce rate high?</button>
+                                    <button onClick={() => handleQuickAction('q_leaving', 'Why are users leaving?')} className="p-2 border border-slate-100 hover:border-indigo-400 rounded-xl text-left text-[11px] font-bold text-slate-700 hover:text-indigo-600 transition-all">❓ Why are users leaving?</button>
+                                    <button onClick={() => handleQuickAction('q_conversions', 'Why are conversions low?')} className="p-2 border border-slate-100 hover:border-indigo-400 rounded-xl text-left text-[11px] font-bold text-slate-700 hover:text-indigo-600 transition-all">❓ Why are conversions low?</button>
+                                    <button onClick={() => handleQuickAction('q_bestpage', 'Which page performs best?')} className="p-2 border border-slate-100 hover:border-indigo-400 rounded-xl text-left text-[11px] font-bold text-slate-700 hover:text-indigo-600 transition-all">❓ Which page performs best?</button>
+                                    <button onClick={() => handleQuickAction('q_improve', 'Which page should I improve?')} className="p-2 border border-slate-100 hover:border-indigo-400 rounded-xl text-left text-[11px] font-bold text-slate-700 hover:text-indigo-600 transition-all">❓ Which page should I improve?</button>
+                                    <button onClick={() => handleQuickAction('q_promote', 'Which products should I promote?')} className="p-2 border border-slate-100 hover:border-indigo-400 rounded-xl text-left text-[11px] font-bold text-slate-700 hover:text-indigo-600 transition-all">❓ Which products to promote?</button>
+                                    <button onClick={() => handleQuickAction('q_keywords', 'Which keywords should I target?')} className="p-2 border border-slate-100 hover:border-indigo-400 rounded-xl text-left text-[11px] font-bold text-slate-700 hover:text-indigo-600 transition-all">❓ Which keywords to target?</button>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* CATEGORY 2: Shopping Interactions (Quantitative) */}
+                        <div className="border border-slate-200 bg-white rounded-2xl overflow-hidden">
