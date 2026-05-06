@@ -83,3 +83,88 @@ function About() {
                     {/* FEATURE CARD 2: Tracker Bot v2.0 */}
                     <div className="bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-md hover:border-indigo-100 transition-all duration-300 flex flex-col justify-between group">
                         <img 
+                            src="https://images.unsplash.com/photo-1531746790731-6c087fdec776?auto=format&fit=crop&w=800&q=80" 
+                            alt="AI Chatbot Copilot" 
+                            className="w-full h-52 object-cover group-hover:scale-103 transition-transform duration-500"
+                        />
+                        <div className="p-6 space-y-3">
+                            <div className="flex items-center justify-between">
+                                <span className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase bg-indigo-50 border border-indigo-100 text-indigo-600 px-2.5 py-1 rounded-full">
+                                    <Bot className="h-3 w-3" /> Conversational AI
+                                </span>
+                                <span className="text-[10px] text-slate-400 font-bold">Database Aware</span>
+                            </div>
+                            <h3 className="text-md font-bold text-slate-900">2. Real-Time Analytics Tracker Bot</h3>
+                            <p className="text-xs text-slate-500 leading-relaxed">
+                                A highly advanced conversational chatbot containing 24 distinct quick-audit questions. Rather than throwing pre-saved static texts, it directly queries live MongoDB session collections in real-time to compute dynamic sales values, device splits, and UX recommendations [1].
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* FEATURE CARD 3: Funnel & Business Audit */}
+                    <div className="bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-md hover:border-indigo-100 transition-all duration-300 flex flex-col justify-between group">
+                        <img 
+                            src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80" 
+                            alt="E-Commerce Funnel Analytics" 
+                            className="w-full h-52 object-cover group-hover:scale-103 transition-transform duration-500"
+                        />
+                        <div className="p-6 space-y-3">
+                            <div className="flex items-center justify-between">
+                                <span className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase bg-emerald-50 border border-emerald-100 text-emerald-600 px-2.5 py-1 rounded-full">
+                                    <Target className="h-3 w-3" /> Shopping Funnels
+                                </span>
+                                <span className="text-[10px] text-slate-400 font-bold">CRUD Integrated</span>
+                            </div>
+                            <h3 className="text-md font-bold text-slate-900">3. Purchase Funnels & Sales Reporting</h3>
+                            <p className="text-xs text-slate-500 leading-relaxed">
+                                Monitors total shopper revenues, average order value (AOV), and cart abandonment rates. Renders an interactive funnel diagram illustrating transition rates from product details views -> add to carts -> checkout drawer triggers to completed sales transactions.
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* FEATURE CARD 4: User Journey Connection Timelines */}
+                    <div className="bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-md hover:border-indigo-100 transition-all duration-300 flex flex-col justify-between group">
+                        <img 
+                            src="https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=800&q=80" 
+                            alt="User Journey Timeline" 
+                            className="w-full h-52 object-cover group-hover:scale-103 transition-transform duration-500"
+                        />
+                        <div className="p-6 space-y-3">
+                            <div className="flex items-center justify-between">
+                                <span className="inline-flex items-center gap-1.5 text-[10px] font-extrabold uppercase bg-purple-50 border border-purple-100 text-purple-600 px-2.5 py-1 rounded-full">
+                                    <Activity className="h-3 w-3" /> Session Mapping
+                                </span>
+                                <span className="text-[10px] text-slate-400 font-bold">Chronological Logs</span>
+                            </div>
+                            <h3 className="text-md font-bold text-slate-900">4. Interactive User Journey Timelines</h3>
+                            <p className="text-xs text-slate-500 leading-relaxed">
+                                Evaluates raw database events and formats them sequentially on an elegant connected timeline interface. Dynamically displays indices for clicks, exact pixel positions, hover focuses, page loads, and active reading session times.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            {/* 3. DYNAMIC METRICS FOR SYSTEM STATS */}
+            <div className="bg-slate-50 p-6 md:p-8 rounded-3xl border border-slate-200/60 flex flex-col md:flex-row justify-between gap-6 items-center">
+                <div className="space-y-1.5 text-center md:text-left">
+                    <h3 className="text-md font-bold text-slate-800 flex items-center justify-center md:justify-start gap-1.5">
+                        <Terminal className="h-5 w-5 text-indigo-600" />
+                        Developer Automation Embedded
+                    </h3>
+                    <p className="text-xs text-slate-400 max-w-md leading-relaxed">
+                        Features fully automated cross-platform startup automation scripts (<strong>`start-project.bat`</strong> and <strong>`start-project.sh`</strong>) initializing complete servers and storefront previews concurrently in a single double-click [1]!
+                    </p>
+                </div>
+                
+                <div className="flex items-center gap-1.5 text-xs text-slate-500 font-extrabold tracking-wider bg-white px-4 py-2 border border-slate-200 rounded-full shadow-sm">
+                    Made with <Heart className="h-4 w-4 text-rose-500 animate-beat fill-rose-500" /> by Nishchay Srivastava
+                </div>
+            </div>
+
+        </div>
+    );
+}
+
+export default About;
