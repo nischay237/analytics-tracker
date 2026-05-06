@@ -264,3 +264,137 @@ function TrackerBot() {
 
                         {/* CATEGORY 2: Shopping Interactions (Quantitative) */}
                         <div className="border border-slate-200 bg-white rounded-2xl overflow-hidden">
+                            <button 
+                                onClick={() => toggleCategory('quantitative')}
+                                className="w-full p-4 flex items-center justify-between font-bold text-xs text-slate-700 bg-slate-50 border-b border-slate-150 outline-none"
+                            >
+                                <span className="flex items-center gap-1.5">🛒 Shopping Actions</span>
+                                {expandedCats.quantitative ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                            </button>
+                            {expandedCats.quantitative && (
+                                <div className="p-3 flex flex-col gap-1.5 bg-white">
+                                    <button onClick={() => handleQuickAction('views', 'Product Views')} className="p-2 border border-slate-100 hover:border-indigo-400 rounded-xl text-left text-[11px] font-bold text-slate-700 hover:text-indigo-600 transition-all">📄 Product Views</button>
+                                    <button onClick={() => handleQuickAction('clicks', 'Product Clicks')} className="p-2 border border-slate-100 hover:border-indigo-400 rounded-xl text-left text-[11px] font-bold text-slate-700 hover:text-indigo-600 transition-all">🖱️ Product Clicks</button>
+                                    <button onClick={() => handleQuickAction('cart_add', 'Add to Cart')} className="p-2 border border-slate-100 hover:border-indigo-400 rounded-xl text-left text-[11px] font-bold text-slate-700 hover:text-indigo-600 transition-all">➕ Add to Cart</button>
+                                    <button onClick={() => handleQuickAction('cart_remove', 'Remove from Cart')} className="p-2 border border-slate-100 hover:border-indigo-400 rounded-xl text-left text-[11px] font-bold text-slate-700 hover:text-indigo-600 transition-all">➖ Remove from Cart</button>
+                                    <button onClick={() => handleQuickAction('wishlist', 'Wishlist Clicks')} className="p-2 border border-slate-100 hover:border-indigo-400 rounded-xl text-left text-[11px] font-bold text-slate-700 hover:text-indigo-600 transition-all">❤️ Wishlist</button>
+                                    <button onClick={() => handleQuickAction('checkout_start', 'Checkout Started')} className="p-2 border border-slate-100 hover:border-indigo-400 rounded-xl text-left text-[11px] font-bold text-slate-700 hover:text-indigo-600 transition-all">💳 Checkout Started</button>
+                                    <button onClick={() => handleQuickAction('checkout_abandon', 'Checkout Abandonment')} className="p-2 border border-slate-100 hover:border-indigo-400 rounded-xl text-left text-[11px] font-bold text-slate-700 hover:text-indigo-600 transition-all">🚪 Checkout Abandonment</button>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* CATEGORY 3: Performance Metrics (Business Intelligence) */}
+                        <div className="border border-slate-200 bg-white rounded-2xl overflow-hidden">
+                            <button 
+                                onClick={() => toggleCategory('business')}
+                                className="w-full p-4 flex items-center justify-between font-bold text-xs text-slate-700 bg-slate-50 border-b border-slate-150 outline-none"
+                            >
+                                <span className="flex items-center gap-1.5">💰 Performance & Finance</span>
+                                {expandedCats.business ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                            </button>
+                            {expandedCats.business && (
+                                <div className="p-3 flex flex-col gap-1.5 bg-white">
+                                    <button onClick={() => handleQuickAction('orders', 'Orders Summary')} className="p-2 border border-slate-100 hover:border-indigo-400 rounded-xl text-left text-[11px] font-bold text-slate-700 hover:text-indigo-600 transition-all">📦 Orders</button>
+                                    <button onClick={() => handleQuickAction('revenue', 'Revenue Metrics')} className="p-2 border border-slate-100 hover:border-indigo-400 rounded-xl text-left text-[11px] font-bold text-slate-700 hover:text-indigo-600 transition-all">💵 Revenue</button>
+                                    <button onClick={() => handleQuickAction('sales', 'Sales Overview')} className="p-2 border border-slate-100 hover:border-indigo-400 rounded-xl text-left text-[11px] font-bold text-slate-700 hover:text-indigo-600 transition-all">📈 Sales</button>
+                                    <button onClick={() => handleQuickAction('conv_rate', 'Conversion Rate')} className="p-2 border border-slate-100 hover:border-indigo-400 rounded-xl text-left text-[11px] font-bold text-slate-700 hover:text-indigo-600 transition-all">🎯 Conversion Rate</button>
+                                    <button onClick={() => handleQuickAction('aov', 'Average Order Value')} className="p-2 border border-slate-100 hover:border-indigo-400 rounded-xl text-left text-[11px] font-bold text-slate-700 hover:text-indigo-600 transition-all">⏱ Average Order Value</button>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* CATEGORY 4: Product & Marketing Analysis */}
+                        <div className="border border-slate-200 bg-white rounded-2xl overflow-hidden">
+                            <button 
+                                onClick={() => toggleCategory('intelligence')}
+                                className="w-full p-4 flex items-center justify-between font-bold text-xs text-slate-700 bg-slate-50 border-b border-slate-150 outline-none"
+                            >
+                                <span className="flex items-center gap-1.5">🔬 Product Intelligence</span>
+                                {expandedCats.intelligence ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                            </button>
+                            {expandedCats.intelligence && (
+                                <div className="p-3 flex flex-col gap-1.5 bg-white">
+                                    <button onClick={() => handleQuickAction('top_sell', 'Top Selling Products')} className="p-2 border border-slate-100 hover:border-indigo-400 rounded-xl text-left text-[11px] font-bold text-slate-700 hover:text-indigo-600 transition-all">⭐ Top Selling Products</button>
+                                    <button onClick={() => handleQuickAction('low_perf', 'Low Performing Products')} className="p-2 border border-slate-100 hover:border-indigo-400 rounded-xl text-left text-[11px] font-bold text-slate-700 hover:text-indigo-600 transition-all">❌ Low Performing Products</button>
+                                    <button onClick={() => handleQuickAction('engagement', 'Product Engagement')} className="p-2 border border-slate-100 hover:border-indigo-400 rounded-xl text-left text-[11px] font-bold text-slate-700 hover:text-indigo-600 transition-all">📊 Product Engagement</button>
+                                    <button onClick={() => handleQuickAction('recom', 'Product Recommendations')} className="p-2 border border-slate-100 hover:border-indigo-400 rounded-xl text-left text-[11px] font-bold text-slate-700 hover:text-indigo-600 transition-all">🧠 Recommendations CTR</button>
+                                    <button onClick={() => handleQuickAction('cart_analysis', 'Cart Abandonment Analysis')} className="p-2 border border-slate-100 hover:border-indigo-400 rounded-xl text-left text-[11px] font-bold text-slate-700 hover:text-indigo-600 transition-all">🛒 Cart Abandonment Audit</button>
+                                </div>
+                            )}
+                        </div>
+
+                    </div>
+                </div>
+
+                {/* Right Side: Dynamic Chat Window */}
+                <div className="flex-grow flex flex-col justify-between min-h-0 bg-white">
+                    
+                    {/* Chat Bubble Scroll Frame */}
+                    <div className="flex-1 p-6 overflow-y-auto space-y-4">
+                        {messages.map((m, i) => (
+                            <div key={i} className={`flex items-start gap-3.5 ${m.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                
+                                {m.sender === 'bot' && (
+                                    <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl flex-shrink-0 shadow-sm border border-indigo-100/50 animate-bounce" style={{ animationDuration: '3s' }}>
+                                        <Bot className="h-4 w-4" />
+                                    </div>
+                                )}
+
+                                <div className={`max-w-[80%] p-4 rounded-2xl text-sm shadow-sm leading-relaxed whitespace-pre-line ${
+                                    m.sender === 'user' 
+                                        ? 'bg-indigo-600 text-white font-bold rounded-tr-none' 
+                                        : 'bg-slate-50 text-slate-800 border border-slate-100 rounded-tl-none font-medium'
+                                }`}>
+                                    {m.text}
+                                </div>
+
+                                {m.sender === 'user' && (
+                                    <div className="p-2 bg-slate-900 text-slate-100 rounded-xl flex-shrink-0 shadow-sm">
+                                        <User className="h-4 w-4" />
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+
+                        {/* Typing Loading Indicators */}
+                        {isTyping && (
+                            <div className="flex items-start gap-3.5 justify-start">
+                                <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl flex-shrink-0">
+                                    <Bot className="h-4 w-4 animate-spin" />
+                                </div>
+                                <div className="bg-slate-50 border border-slate-100 p-4 rounded-2xl rounded-tl-none flex items-center space-x-1 shadow-sm">
+                                    <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                                    <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                                    <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                                </div>
+                            </div>
+                        )}
+
+                        <div ref={messagesEndRef} />
+                    </div>
+
+                    {/* Chat Text Form Input */}
+                    <form onSubmit={handleSend} className="p-4 border-t border-slate-100 flex items-center gap-3 bg-slate-50/50 flex-shrink-0">
+                        <input 
+                            type="text" 
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            placeholder="Ask me a metrics query (e.g. 'How much revenue today?')..."
+                            className="flex-1 p-3.5 bg-white border border-slate-200 rounded-2xl text-sm focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all font-medium text-slate-800 shadow-sm"
+                        />
+                        <button 
+                            type="submit" 
+                            className="p-3.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl transition-all shadow-md shadow-indigo-600/15 outline-none flex items-center justify-center flex-shrink-0"
+                        >
+                            <Send className="h-4 w-4" />
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default TrackerBot;
